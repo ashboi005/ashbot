@@ -65,6 +65,7 @@
     "packages/agent": {
       "name": "@ashbot/agent",
       "dependencies": {
+        "@ashbot/integrations": "workspace:*",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -104,6 +105,14 @@
         "drizzle-kit": "1.0.0-rc.4",
         "typescript": "catalog:",
         "varlock": "catalog:",
+      },
+    },
+    "packages/integrations": {
+      "name": "@ashbot/integrations",
+      "devDependencies": {
+        "@ashbot/config": "workspace:*",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
       },
     },
     "packages/ui": {
@@ -162,6 +171,8 @@
     "@ashbot/config": ["@ashbot/config@workspace:packages/config"],
 
     "@ashbot/db": ["@ashbot/db@workspace:packages/db"],
+
+    "@ashbot/integrations": ["@ashbot/integrations@workspace:packages/integrations"],
 
     "@ashbot/ui": ["@ashbot/ui@workspace:packages/ui"],
 
