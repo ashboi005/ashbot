@@ -62,6 +62,17 @@
         "typescript": "catalog:",
       },
     },
+    "packages/agent": {
+      "name": "@ashbot/agent",
+      "dependencies": {
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@ashbot/config": "workspace:*",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "packages/auth": {
       "name": "@ashbot/auth",
       "dependencies": {
@@ -143,6 +154,8 @@
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.3.0", "", {}, "sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA=="],
+
+    "@ashbot/agent": ["@ashbot/agent@workspace:packages/agent"],
 
     "@ashbot/auth": ["@ashbot/auth@workspace:packages/auth"],
 

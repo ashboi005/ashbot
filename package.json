@@ -27,6 +27,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --filter '*' dev",
+    "test": "bun test",
     "build": "bun run --filter '*' build",
     "check-types": "bun run --filter '*' check-types",
     "dev:web": "bun run --filter web dev",
