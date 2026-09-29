@@ -1,0 +1,3 @@
+{
+  "extends": "@ashbot/config/tsconfig.base.json"
+}
