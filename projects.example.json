@@ -1,0 +1,28 @@
+{
+  "projects": [
+    {
+      "id": "acme",
+      "name": "Acme Customer Portal",
+      "runbookFile": "runbooks/acme.md",
+      "coolify": {
+        "baseUrl": "https://coolify.acme-vps.example.com",
+        "token": "<coolify token with read + read:sensitive>",
+        "apps": [
+          { "name": "api", "uuid": "<coolify app uuid>" },
+          { "name": "web", "uuid": "<coolify app uuid>" }
+        ]
+      },
+      "axiom": {
+        "token": "<axiom API token with query permission>",
+        "datasets": ["acme-api"]
+      },
+      "aws": {
+        "region": "ap-south-1",
+        "accessKeyId": "<ashbot-readonly access key id>",
+        "secretAccessKey": "<ashbot-readonly secret>",
+        "logGroups": ["/aws/lambda/acme-worker"],
+        "buckets": ["acme-uploads"]
+      }
+    }
+  ]
+}

@@ -56,3 +56,8 @@ coverage
 .cache
 tmp
 temp
+
+# Ashbot local investigator
+projects.local.json
+runbooks/
+.investigations/
