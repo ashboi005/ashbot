@@ -1,3 +1,4 @@
+export * from "./harness";
 export * from "./llm";
 export * from "./output";
 export * from "./report";
