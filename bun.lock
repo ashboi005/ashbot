@@ -30,11 +30,15 @@
     "apps/server": {
       "name": "server",
       "dependencies": {
+        "@ashbot/agent": "workspace:*",
         "@ashbot/auth": "workspace:*",
+        "@ashbot/contracts": "workspace:*",
         "@ashbot/db": "workspace:*",
+        "@ashbot/integrations": "workspace:*",
         "@elysiajs/cors": "^1.4.2",
         "@sinclair/typebox": "^0.34.52",
         "better-auth": "catalog:",
+        "drizzle-orm": "catalog:",
         "elysia": "^1.4.30",
         "varlock": "catalog:",
         "zod": "catalog:",
@@ -50,6 +54,7 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
+        "@ashbot/contracts": "workspace:*",
         "@ashbot/ui": "workspace:*",
         "@swc/helpers": "^0.5.23",
         "@tanstack/react-form": "^1.33.5",
@@ -105,6 +110,16 @@
     "packages/config": {
       "name": "@ashbot/config",
       "version": "0.0.0",
+    },
+    "packages/contracts": {
+      "name": "@ashbot/contracts",
+      "dependencies": {
+        "@ashbot/agent": "workspace:*",
+      },
+      "devDependencies": {
+        "@ashbot/config": "workspace:*",
+        "typescript": "catalog:",
+      },
     },
     "packages/db": {
       "name": "@ashbot/db",
@@ -192,6 +207,8 @@
     "@ashbot/auth": ["@ashbot/auth@workspace:packages/auth"],
 
     "@ashbot/config": ["@ashbot/config@workspace:packages/config"],
+
+    "@ashbot/contracts": ["@ashbot/contracts@workspace:packages/contracts"],
 
     "@ashbot/db": ["@ashbot/db@workspace:packages/db"],
 
