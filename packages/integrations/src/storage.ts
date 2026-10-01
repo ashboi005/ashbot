@@ -60,3 +60,25 @@ export function createS3Storage(opts: {
     },
   };
 }
+
+export type StorageEnv = {
+  S3_BUCKET?: string;
+  S3_REGION?: string;
+  S3_ACCESS_KEY_ID?: string;
+  S3_SECRET_ACCESS_KEY?: string;
+  S3_ENDPOINT?: string;
+  UPLOADS_DIR?: string;
+};
+
+export function storageFromEnv(env: StorageEnv, defaultDir: string): Storage {
+  if (!env.S3_BUCKET) return createLocalStorage(env.UPLOADS_DIR || defaultDir);
+  const missing = (["S3_REGION", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"] as const).filter((key) => !env[key]);
+  if (missing.length > 0) throw new Error(`S3_BUCKET is set but ${missing.join(", ")} ${missing.length === 1 ? "is" : "are"} missing.`);
+  return createS3Storage({
+    bucket: env.S3_BUCKET,
+    region: env.S3_REGION!,
+    accessKeyId: env.S3_ACCESS_KEY_ID!,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY!,
+    endpoint: env.S3_ENDPOINT || undefined,
+  });
+}

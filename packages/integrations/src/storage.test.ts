@@ -29,3 +29,18 @@ describe("s3 storage", () => {
     expect(url).toContain("X-Amz-Signature");
   });
 });
+
+describe("storageFromEnv", () => {
+  test("uses S3 when a bucket is configured, local disk otherwise", async () => {
+    const { storageFromEnv } = await import("./storage");
+    const s3 = storageFromEnv({ S3_BUCKET: "b", S3_REGION: "ap-south-1", S3_ACCESS_KEY_ID: "k", S3_SECRET_ACCESS_KEY: "s" }, "/tmp/x");
+    expect(await s3.url("a")).toContain("X-Amz-Signature");
+    const local = storageFromEnv({}, await mkdtemp(join(tmpdir(), "ashbot-")));
+    expect(await local.url("a")).toBeNull();
+  });
+
+  test("refuses a half-configured bucket", async () => {
+    const { storageFromEnv } = await import("./storage");
+    expect(() => storageFromEnv({ S3_BUCKET: "b" }, "/tmp/x")).toThrow("S3_REGION");
+  });
+});
