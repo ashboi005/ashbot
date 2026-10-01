@@ -1,1 +1,80 @@
 @import "@ashbot/ui/globals.css";
+
+/* Ashbot palette: cool paper, ink, one teal signal. See docs/superpowers/specs/2026-10-02-portal-voice-worker-design.md */
+:root {
+  --background: #f7f8fa;
+  --foreground: #18213a;
+  --card: #ffffff;
+  --card-foreground: #18213a;
+  --popover: #ffffff;
+  --popover-foreground: #18213a;
+  --primary: #18213a;
+  --primary-foreground: #f7f8fa;
+  --secondary: #eef0f4;
+  --secondary-foreground: #18213a;
+  --muted: #eef0f4;
+  --muted-foreground: #5b6478;
+  --accent: #e6f2ef;
+  --accent-foreground: #0b5c51;
+  --destructive: #b42318;
+  --border: #e3e6ec;
+  --input: #d9dde5;
+  --ring: #0f7b6c;
+  --signal: #0f7b6c;
+  --signal-soft: #e6f2ef;
+  --sev-critical: #b42318;
+  --sev-high: #c2410c;
+  --sev-medium: #a16207;
+  --sev-low: #475467;
+}
+
+.dark {
+  --background: #0e1424;
+  --foreground: #e9ecf2;
+  --card: #151c2f;
+  --card-foreground: #e9ecf2;
+  --popover: #151c2f;
+  --popover-foreground: #e9ecf2;
+  --primary: #e9ecf2;
+  --primary-foreground: #0e1424;
+  --secondary: #1c2438;
+  --secondary-foreground: #e9ecf2;
+  --muted: #1c2438;
+  --muted-foreground: #98a1b3;
+  --accent: #12332f;
+  --accent-foreground: #7fdccb;
+  --destructive: #f97066;
+  --border: #252e44;
+  --input: #2c364e;
+  --ring: #2bb39e;
+  --signal: #2bb39e;
+  --signal-soft: #12332f;
+  --sev-critical: #f97066;
+  --sev-high: #fb923c;
+  --sev-medium: #facc15;
+  --sev-low: #98a1b3;
+}
+
+@theme inline {
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --color-signal: var(--signal);
+  --color-signal-soft: var(--signal-soft);
+  --color-sev-critical: var(--sev-critical);
+  --color-sev-high: var(--sev-high);
+  --color-sev-medium: var(--sev-medium);
+  --color-sev-low: var(--sev-low);
+}
+
+@keyframes signal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--signal) 45%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--signal) 0%, transparent); }
+}
+
+.signal-pulse {
+  animation: signal-pulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-pulse { animation: none; }
+}
