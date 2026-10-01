@@ -1,0 +1,23 @@
+{
+  "name": "worker",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --env-file=../server/.env --watch src/index.ts",
+    "start": "bun --env-file=../server/.env src/index.ts",
+    "check-types": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ashbot/agent": "workspace:*",
+    "@ashbot/db": "workspace:*",
+    "@ashbot/integrations": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@ashbot/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}
