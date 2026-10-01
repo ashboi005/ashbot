@@ -1,6 +1,6 @@
-import type { AwsReader } from "@ashbot/integrations/aws";
-import type { AxiomClient } from "@ashbot/integrations/axiom";
-import type { CoolifyClient } from "@ashbot/integrations/coolify";
+import { createAwsReader, type AwsReader } from "@ashbot/integrations/aws";
+import { createAxiomClient, type AxiomClient } from "@ashbot/integrations/axiom";
+import { createCoolifyClient, type CoolifyClient } from "@ashbot/integrations/coolify";
 
 import type { ProjectProfile } from "../profile";
 import type { SnapshotStore } from "../snapshots";
@@ -17,4 +17,12 @@ export function buildProjectTools(profile: ProjectProfile, deps: ToolDeps): AnyT
     ...(profile.axiom && deps.axiom ? axiomTools(profile.axiom, deps.axiom, deps.snapshots) : []),
     ...(profile.aws && deps.aws ? awsTools(profile.aws, deps.aws, deps.snapshots) : []),
   ];
+}
+
+export function createProjectIntegrations(profile: ProjectProfile): Omit<ToolDeps, "snapshots"> {
+  return {
+    coolify: profile.coolify ? createCoolifyClient(profile.coolify) : undefined,
+    axiom: profile.axiom ? createAxiomClient(profile.axiom) : undefined,
+    aws: profile.aws ? createAwsReader(profile.aws) : undefined,
+  };
 }

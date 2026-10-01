@@ -1,8 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
-import { createGatewayClient } from "@ashbot/agent";
-import { createAwsReader, createAxiomClient, createCoolifyClient } from "@ashbot/integrations";
+import { createGatewayClient, createProjectIntegrations } from "@ashbot/agent";
 
 import { runCli } from "./main";
 
@@ -18,11 +17,7 @@ const code = await runCli(process.argv.slice(2), {
   out: (line) => console.log(line),
   now: () => new Date(),
   createLlm: (config) => createGatewayClient({ baseUrl: config.baseUrl, apiKey: config.apiKey, model: config.model }),
-  createIntegrations: (profile) => ({
-    coolify: profile.coolify ? createCoolifyClient(profile.coolify) : undefined,
-    axiom: profile.axiom ? createAxiomClient(profile.axiom) : undefined,
-    aws: profile.aws ? createAwsReader(profile.aws) : undefined,
-  }),
+  createIntegrations: createProjectIntegrations,
 });
 
 process.exit(code);

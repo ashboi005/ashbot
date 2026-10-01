@@ -6,4 +6,5 @@ export * from "./prompt";
 export * from "./report";
 export * from "./snapshots";
 export * from "./tool";
+export * from "./voice";
 export * from "./tools/index";

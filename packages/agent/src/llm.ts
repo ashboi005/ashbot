@@ -49,7 +49,7 @@ export function createGatewayClient(opts: {
 
   return {
     async complete({ messages, tools }) {
-      const body = JSON.stringify({ model: opts.model, messages, tools, tool_choice: "auto" });
+      const body = JSON.stringify({ model: opts.model, messages, ...(tools.length > 0 ? { tools, tool_choice: "auto" } : {}) });
 
       for (let attempt = 1; ; attempt++) {
         let res: Response;

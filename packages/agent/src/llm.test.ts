@@ -97,3 +97,15 @@ describe("createGatewayClient", () => {
     await expect(client.complete({ messages: [{ role: "user", content: "hi" }], tools })).rejects.toThrow("no choices");
   });
 });
+
+test("omits tools and tool_choice when there are no tools", async () => {
+  let sent: Record<string, unknown> = {};
+  const fetchFn: FetchFn = async (_url, init) => {
+    sent = JSON.parse(String(init?.body));
+    return jsonResponse(200, { choices: [{ message: { role: "assistant", content: "ok" } }] });
+  };
+  const client = createGatewayClient({ baseUrl: "https://g/v1", apiKey: "k", model: "m", fetch: fetchFn });
+  const result = await client.complete({ messages: [{ role: "user", content: "hi" }], tools: [] });
+  expect(sent).toEqual({ model: "m", messages: [{ role: "user", content: "hi" }] });
+  expect(result.message.content).toBe("ok");
+});

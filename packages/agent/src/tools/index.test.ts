@@ -30,3 +30,11 @@ test("includes tools only for configured and provided integrations", () => {
   expect(names).toContain("axiom_query");
   expect(names.some((n) => n.startsWith("aws_"))).toBe(false);
 });
+
+test("createProjectIntegrations only builds clients for configured integrations", async () => {
+  const { createProjectIntegrations } = await import("./index");
+  const integrations = createProjectIntegrations(profile!);
+  expect(integrations.coolify).toBeDefined();
+  expect(integrations.axiom).toBeDefined();
+  expect(integrations.aws).toBeUndefined();
+});
