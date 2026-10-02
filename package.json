@@ -39,7 +39,7 @@
     "env:generate": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./packages/db/",
     "postinstall": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./packages/db/",
     "auth:generate": "cd apps/server && bun run auth:generate",
-    "investigate": "bun apps/investigator/src/index.ts",
+    "investigate": "bun --env-file=apps/server/.env --env-file=.env apps/investigator/src/index.ts",
     "admin:create": "bun run --filter server admin:create --",
     "dev:worker": "bun run --filter worker dev"
   },

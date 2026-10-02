@@ -15,7 +15,7 @@ export type CliConfig = { apiKey: string; baseUrl: string; model: string; caps: 
 
 export function loadConfig(env: Record<string, string | undefined>): CliConfig {
   const result = envSchema.safeParse(env);
-  if (!result.success) throw new Error(`Invalid environment (see .env.example):\n${z.prettifyError(result.error)}`);
+  if (!result.success) throw new Error(`Invalid environment (set these in apps/server/.env):\n${z.prettifyError(result.error)}`);
   const e = result.data;
   return {
     apiKey: e.MERGE_GATEWAY_API_KEY,
