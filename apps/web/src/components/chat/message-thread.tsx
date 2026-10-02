@@ -29,8 +29,8 @@ function ThreadMessage({ message, viewer }: { message: MessageDto; viewer: "clie
 
   if (message.kind === "system") {
     return (
-      <p className="mx-auto flex max-w-md items-center gap-2 text-center text-sm text-muted-foreground">
-        <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-signal" />
+      <p className="mx-auto max-w-md text-center text-sm text-balance text-muted-foreground">
+        <span aria-hidden className="mr-2 inline-block size-1.5 rounded-full bg-signal align-middle" />
         {message.body}
       </p>
     );
