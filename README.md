@@ -26,7 +26,7 @@ bun install
    bun run admin:create --email you@example.com --name "Your Name" --password "a-long-password"
    ```
 2. **Fill `apps/server/.env`** (schema and descriptions in `apps/server/.env.schema`). The server and worker both read this file:
-   - `MERGE_GATEWAY_API_KEY`, `LLM_MODEL` (exact GLM-5.3-Flash id from `GET https://gateway.merge.dev/v1/models`), optional `CLEANUP_MODEL`
+   - `MERGE_GATEWAY_API_KEY`, `LLM_MODEL` (e.g. `zai/glm-5.3-flash`; gateway base URL is `https://api-gateway.merge.dev/v1`), optional `CLEANUP_MODEL`
    - `DEEPGRAM_API_KEY` for voice-note transcripts (without it, voice notes are kept but not transcribed)
    - `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` for attachments (without them, files go to `.uploads/`)
    - `DISCORD_WEBHOOK_URL` for report notifications

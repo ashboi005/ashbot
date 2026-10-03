@@ -26,7 +26,7 @@ Ashbot is an always-on investigation assistant for client support. A registered 
 | Notifications | A one-way Discord webhook on each new hypothesis. A two-way bot comes later. |
 | Code access | A GitHub Personal Access Token. Ashwath provides the repo and project details at setup. |
 | Shell access | Only commands on an allowlist. No open-ended shell. |
-| LLM access | **Merge Gateway** (OpenAI-compatible, `https://gateway.merge.dev/v1`). Routing, provider failover and spend caps are set in the gateway, not in code. |
+| LLM access | **Merge Gateway** (OpenAI-compatible, `https://api-gateway.merge.dev/v1`). Routing, provider failover and spend caps are set in the gateway, not in code. |
 | Model | **GLM-5.3-Flash** (Z.ai), called through Merge Gateway. Set by config (`LLM_MODEL`), so switching models is an env change. The exact gateway model string gets verified against the gateway's `/v1/models` at build time. |
 | Agent harness | **A custom, lightweight TypeScript harness** in the Bun monorepo. OpenHarness isn't used and the backend stays on Elysia. See §5. |
 | AWS | The agent gets a **read-only** IAM key. Ashwath's admin keys are kept separately for approved changes and AWS config updates, and the worker never loads them. |

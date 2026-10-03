@@ -6,7 +6,7 @@ test("applies defaults", () => {
   const config = loadConfig({ MERGE_GATEWAY_API_KEY: "k", LLM_MODEL: "zai/glm-5.3-flash" });
   expect(config).toEqual({
     apiKey: "k",
-    baseUrl: "https://gateway.merge.dev/v1",
+    baseUrl: "https://api-gateway.merge.dev/v1",
     model: "zai/glm-5.3-flash",
     caps: { maxToolCalls: 40, maxWallClockMs: 600_000, maxTokens: 1_000_000 },
   });

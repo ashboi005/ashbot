@@ -4,7 +4,7 @@ import { z } from "zod";
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
   MERGE_GATEWAY_API_KEY: z.string().min(1),
-  MERGE_GATEWAY_BASE_URL: z.url().default("https://gateway.merge.dev/v1"),
+  MERGE_GATEWAY_BASE_URL: z.url().default("https://api-gateway.merge.dev/v1"),
   LLM_MODEL: z.string().min(1),
   CORS_ORIGIN: z.url().default("http://localhost:3001"),
   PROJECTS_FILE: z.string().optional(),

@@ -4,7 +4,7 @@ import type { Caps } from "@ashbot/agent";
 
 const envSchema = z.object({
   MERGE_GATEWAY_API_KEY: z.string().min(1),
-  MERGE_GATEWAY_BASE_URL: z.url().default("https://gateway.merge.dev/v1"),
+  MERGE_GATEWAY_BASE_URL: z.url().default("https://api-gateway.merge.dev/v1"),
   LLM_MODEL: z.string().min(1),
   INVESTIGATION_MAX_TOOL_CALLS: z.coerce.number().int().positive().default(40),
   INVESTIGATION_MAX_MINUTES: z.coerce.number().positive().default(10),

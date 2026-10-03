@@ -7,7 +7,7 @@ const base = { DATABASE_URL: "postgres://a:b@localhost:5432/x", MERGE_GATEWAY_AP
 test("applies defaults", () => {
   const config = loadWorkerConfig(base, "/repo");
   expect(config.projectsFile).toBe("/repo/projects.local.json");
-  expect(config.gatewayBaseUrl).toBe("https://gateway.merge.dev/v1");
+  expect(config.gatewayBaseUrl).toBe("https://api-gateway.merge.dev/v1");
   expect(config.discordWebhookUrl).toBeUndefined();
   expect(config.adminUrl("t1")).toBe("http://localhost:3001/admin/tickets/t1");
   expect(config.pollMs).toBe(3000);

@@ -18,7 +18,7 @@ const deepgram = ENV.DEEPGRAM_API_KEY ? createDeepgramClient({ apiKey: ENV.DEEPG
 const cleanupModel = ENV.CLEANUP_MODEL || ENV.LLM_MODEL;
 const cleanupLlm =
   ENV.MERGE_GATEWAY_API_KEY && cleanupModel
-    ? createGatewayClient({ baseUrl: ENV.MERGE_GATEWAY_BASE_URL ?? "https://gateway.merge.dev/v1", apiKey: ENV.MERGE_GATEWAY_API_KEY, model: cleanupModel })
+    ? createGatewayClient({ baseUrl: ENV.MERGE_GATEWAY_BASE_URL ?? "https://api-gateway.merge.dev/v1", apiKey: ENV.MERGE_GATEWAY_API_KEY, model: cleanupModel })
     : undefined;
 
 export const appDeps: AppDeps = {

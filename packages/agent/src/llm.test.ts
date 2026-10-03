@@ -31,12 +31,12 @@ describe("createGatewayClient", () => {
       calls.push({ url, init });
       return jsonResponse(200, okBody);
     };
-    const client = createGatewayClient({ baseUrl: "https://gateway.merge.dev/v1/", apiKey: "k-123", model: "zai/glm-5.3-flash", fetch: fetchFn });
+    const client = createGatewayClient({ baseUrl: "https://api-gateway.merge.dev/v1/", apiKey: "k-123", model: "zai/glm-5.3-flash", fetch: fetchFn });
 
     const result = await client.complete({ messages: [{ role: "user", content: "hi" }], tools });
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]?.url).toBe("https://gateway.merge.dev/v1/chat/completions");
+    expect(calls[0]?.url).toBe("https://api-gateway.merge.dev/v1/chat/completions");
     const headers = new Headers(calls[0]?.init?.headers);
     expect(headers.get("authorization")).toBe("Bearer k-123");
     const body = JSON.parse(String(calls[0]?.init?.body));
