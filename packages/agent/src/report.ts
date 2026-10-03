@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const reportSchema = z.object({
-  title: z.string().min(1).max(200).describe("One-line summary of what is wrong"),
+  title: z.string().min(1).max(200).describe("Short headline of what is wrong, ideally under 80 characters"),
   severity: z.enum(["low", "medium", "high", "critical"]),
   status: z
     .enum(["confident", "likely", "inconclusive"])
