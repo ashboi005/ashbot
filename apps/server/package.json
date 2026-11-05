@@ -9,14 +9,20 @@
     "dev": "bun run --hot src/index.ts",
     "start": "bun run dist/index.mjs",
     "env:generate": "varlock codegen",
-    "auth:generate": "varlock run -- bun x auth@latest generate --config src/services.ts --output ../../packages/db/src/schema/auth.ts --yes"
+    "auth:generate": "varlock run -- bun x auth@latest generate --config src/services.ts --output ../../packages/db/src/schema/auth.ts --yes",
+    "test": "bun test",
+    "admin:create": "varlock run -- bun src/scripts/create-admin.ts"
   },
   "dependencies": {
+    "@ashbot/agent": "workspace:*",
     "@ashbot/auth": "workspace:*",
+    "@ashbot/contracts": "workspace:*",
     "@ashbot/db": "workspace:*",
+    "@ashbot/integrations": "workspace:*",
     "@elysiajs/cors": "^1.4.2",
     "@sinclair/typebox": "^0.34.52",
     "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
     "elysia": "^1.4.30",
     "varlock": "catalog:",
     "zod": "catalog:"

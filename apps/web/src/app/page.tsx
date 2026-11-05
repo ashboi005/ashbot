@@ -1,30 +1,23 @@
 "use client";
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
+import { FullPageMessage } from "@/components/full-page-message";
+import { ApiRequestError } from "@/lib/api";
+import { useMe } from "@/lib/queries";
 
 export default function Home() {
-  return (
-    <div className="container mx-auto max-w-3xl px-4 py-2">
-      <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-      <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-        </section>
-      </div>
-    </div>
-  );
+  const router = useRouter();
+  const { data: me, error } = useMe();
+
+  useEffect(() => {
+    if (me) router.replace(me.role === "admin" ? "/admin" : "/chat");
+    else if (error instanceof ApiRequestError && error.status === 401) router.replace("/login");
+  }, [me, error, router]);
+
+  if (error && !(error instanceof ApiRequestError && error.status === 401)) {
+    return <FullPageMessage title="Can't load your account">{error.message}</FullPageMessage>;
+  }
+  return <FullPageMessage title="Opening Ashbot…" />;
 }

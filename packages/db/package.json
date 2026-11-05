@@ -3,6 +3,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@ashbot/config": "workspace:*",
+    "@electric-sql/pglite": "^0.5.8",
     "@types/pg": "^8.23.1",
     "drizzle-kit": "1.0.0-rc.4",
     "typescript": "catalog:",

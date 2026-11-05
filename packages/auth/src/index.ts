@@ -2,6 +2,7 @@ import type { Database } from "@ashbot/db";
 import * as schema from "@ashbot/db/schema/auth";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 
 export type AuthConfig = {
   BETTER_AUTH_URL: string;
@@ -20,7 +21,8 @@ export function createAuth(
       schema,
     }),
     trustedOrigins: [env.CORS_ORIGIN, ...desktopOrigins],
-    emailAndPassword: { enabled: true },
+    // Invite-only: accounts are created server-side (admin plugin's createUser).
+    emailAndPassword: { enabled: true, disableSignUp: true },
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
     advanced: {
@@ -30,8 +32,9 @@ export function createAuth(
         httpOnly: true,
       },
     },
-    plugins: [],
+    plugins: [admin({ defaultRole: "user", adminRoles: ["admin"] })],
   });
 }
 
-export type Session = ReturnType<typeof createAuth>["$Infer"]["Session"];
+export type Auth = ReturnType<typeof createAuth>;
+export type Session = Auth["$Infer"]["Session"];

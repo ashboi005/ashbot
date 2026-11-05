@@ -78,68 +78,52 @@ Every `*.ts` above except `index.ts` files, `packages/integrations/src/aws.ts` (
 
 ---
 
-### Task 1: Phase 0 — Ashbot Postgres on Coolify + initial migration
+### Task 1: Phase 0 — Local Postgres (Docker) + initial migration
+
+Ashwath creates the production `ashbot` Postgres on his Coolify himself and provides its URL, which goes in `apps/server/.env`. Local development and tests use Docker.
 
 **Files:**
+- Create: `docker-compose.yml`
 - Create: `packages/db/src/migrations/*` (generated)
-- Modify: `apps/server/.env` (local only, not committed)
 
 **Interfaces:**
-- Consumes: the existing scaffold (`packages/db/drizzle.config.ts`, `packages/db/src/schema/auth.ts`).
-- Produces: a running `ashbot-postgres` on Ashwath's Coolify with the Better Auth tables, and a committed initial migration.
+- Consumes: the existing scaffold (`packages/db/drizzle.config.ts`, `packages/db/src/schema/auth.ts`, `apps/server/.env` with `DATABASE_URL=postgresql://postgres:password@localhost:5432/postgres`).
+- Produces: `docker compose up -d` starts a local Postgres matching the scaffold's default `DATABASE_URL`, plus a committed initial migration.
 
-- [ ] **Step 1: Generate the initial migration (no DB connection needed)**
+- [ ] **Step 1: Add the local database**
 
-Run from the repo root:
-```bash
-bun run db:generate
-```
-Expected: a new SQL file under `packages/db/src/migrations/` containing `CREATE TABLE "user"`, `"session"`, `"account"`, `"verification"`.
-
-- [ ] **Step 2: Create the database in Coolify (manual, Ashwath)**
-
-In the Coolify UI on Ashwath's VPS:
-1. Projects → **New** → name `ashbot` → environment `production`.
-2. **+ New resource** → Databases → **PostgreSQL** (latest 17.x image).
-3. Name `ashbot-postgres`. Set Postgres user `ashbot`, database `ashbot`, and a generated password.
-4. Leave **"Make it publicly available" OFF**. Docker-published ports bypass `ufw`, so public exposure can't be firewalled reliably.
-5. **Start** it. Copy the **Postgres URL (internal)** shown on the resource page. The server and worker apps will use it in phase 4.
-
-- [ ] **Step 3: Open an SSH tunnel to the container (no public port)**
-
-On the VPS, find the container's IP (the container name is the resource UUID shown in Coolify):
-```bash
-ssh root@<ashbot-vps> "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' <postgres-resource-uuid>"
-```
-Then from the laptop, in a separate terminal:
-```bash
-ssh -N -L 54329:<container-ip>:5432 root@<ashbot-vps>
+`docker-compose.yml`:
+```yaml
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ashbot-pg:/var/lib/postgresql/data
+volumes:
+  ashbot-pg:
 ```
 
-- [ ] **Step 4: Point the local server env at the tunnel and migrate**
+- [ ] **Step 2: Generate the initial migration (no DB connection needed)**
 
-Edit `apps/server/.env` (gitignored) and set:
-```
-DATABASE_URL=postgresql://ashbot:<password>@localhost:54329/ashbot
-```
-Run:
-```bash
-bun run db:migrate
-```
-Expected: drizzle-kit reports the migration applied, with no errors.
+Run: `bun run db:generate`
+Expected: a new SQL file under `packages/db/src/migrations/` with `CREATE TABLE "user"`, `"session"`, `"account"`, `"verification"`.
 
-- [ ] **Step 5: Verify tables exist**
+- [ ] **Step 3: Apply it locally (needs Docker running)**
+
+Run: `docker compose up -d && bun run db:migrate && psql postgresql://postgres:password@localhost:5432/postgres -c '\dt'`
+Expected: `account`, `session`, `user`, `verification` listed. If the Docker daemon isn't running, skip this step and note it; the migration applies the same way once it is.
+
+- [ ] **Step 4: Commit**
 
 ```bash
-psql "postgresql://ashbot:<password>@localhost:54329/ashbot" -c '\dt'
-```
-Expected: `account`, `session`, `user`, `verification` (plus drizzle's migrations table).
-
-- [ ] **Step 6: Commit the migration**
-
-```bash
-git add packages/db/src/migrations
-git commit -m "feat(db): initial migration for Better Auth tables
+git add docker-compose.yml packages/db/src/migrations
+git commit -m "feat(db): local Postgres via Docker and initial auth migration
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```

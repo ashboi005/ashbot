@@ -1,0 +1,21 @@
+{
+  "name": "@ashbot/agent",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ashbot/integrations": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@ashbot/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}

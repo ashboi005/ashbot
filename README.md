@@ -1,110 +1,55 @@
-# ashbot
+# Ashbot
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Elysia, and more.
+An always-on investigation assistant for client support. Clients report problems in a chat (text, screenshots, voice notes). Ashbot reads the project's Coolify, Axiom and AWS read-only, writes a report with at most two hypotheses, and pings Ashwath on Discord. Clients never talk to the agent; Ashwath replies.
 
-## Features
+```
+apps/web           Next.js — client chat (/chat) and admin panel (/admin)
+apps/server        Elysia API — auth (invite-only), tickets, uploads, voice notes, admin
+apps/worker        Runs queued investigations, saves reports, posts to Discord
+apps/investigator  Command-line investigator (same harness, no portal)
+packages/agent     Harness: tool loop, caps, redaction, prompts, tools
+packages/integrations  Read-only clients: Coolify, Axiom, AWS, Deepgram, Discord, S3
+packages/db        Drizzle schema + migrations      packages/contracts  API types
+```
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Elysia** - Type-safe, high-performance framework
-- **Bun** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
+Design docs: `docs/superpowers/specs/`.
 
-## Getting Started
-
-First, install the dependencies:
+## Setup
 
 ```bash
 bun install
 ```
 
-## Database Setup
+1. **Database.** Set `DATABASE_URL` in `apps/server/.env` (for local work, `docker compose up -d` gives you `postgresql://postgres:password@localhost:5432/postgres`). Then:
+   ```bash
+   bun run db:migrate
+   bun run admin:create --email you@example.com --name "Your Name" --password "a-long-password"
+   ```
+2. **Fill `apps/server/.env`** (schema and descriptions in `apps/server/.env.schema`). The server and worker both read this file:
+   - `MERGE_GATEWAY_API_KEY`, `LLM_MODEL` (e.g. `zai/glm-5.3-flash`; gateway base URL is `https://api-gateway.merge.dev/v1`), optional `CLEANUP_MODEL`
+   - `DEEPGRAM_API_KEY` for voice-note transcripts (without it, voice notes are kept but not transcribed)
+   - `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` for attachments (without them, files go to `.uploads/`)
+   - `DISCORD_WEBHOOK_URL` for report notifications
+3. **Client infrastructure.** Copy `projects.example.json` to `projects.local.json` and fill one entry per project: Coolify URL + read-only token (`read` + `read:sensitive`) + app UUIDs, Axiom token + datasets, read-only AWS keys. The `id` must match the project id you create in the admin panel.
 
-This project uses PostgreSQL with Drizzle ORM.
-
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
-
-```bash
-bun run db:push
-```
-
-Then, run the development server:
-
-```bash
-bun run dev
-```
-
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
-
-## UI Customization
-
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
-
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
-
-### Add more shared components
-
-Run this from the project root to add more primitives to the shared UI package:
+## Run
 
 ```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
+bun run dev          # web on :3001, API on :3000
+bun run dev:worker   # investigation worker (separate terminal)
 ```
 
-Import shared components like this:
+Then sign in at http://localhost:3001, add a project under **Projects** (same id as in `projects.local.json`), and invite a client under **Clients**: you get a link to send them.
 
-```tsx
-import { Button } from "@ashbot/ui/components/button";
+Command-line investigation without the portal:
+
+```bash
+bun run investigate --project <id> --since "this morning" "client's message" [--image shot.png]
 ```
 
-### Add app-specific blocks
+## Tests
 
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Environment Configuration
-
-Each app owns its environment schema in `.env.schema`. Varlock generates `src/env.ts` during installation; run `bun run env:generate` after changing a schema. Commit schemas, and keep secrets in ignored env files or your deployment platform.
-
-Import the generated `ENV` accessor in application code. Shared database and auth packages receive configuration or initialized clients from the application. See [Varlock's monorepo guide](https://varlock.dev/guides/monorepos/).
-
-Bun's automatic env loading is disabled in `bunfig.toml`; the framework integration or server bootstrap loads Varlock. Node deployments must include Varlock and its dependencies alongside the app schema.
-
-Run standalone Node/Bun tools that use Varlock from the owning app directory so they load that app's schema and env files. `env:generate` only generates TypeScript files; it does not initialize environment values in a subsequent command.
-
-## Project Structure
-
+```bash
+bun test             # everything (Postgres-backed tests use in-process PGlite, no Docker needed)
+bun run check-types
 ```
-ashbot/
-├── apps/
-│   ├── web/         # Frontend application (Next.js)
-│   └── server/      # Backend API (Elysia)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
-```
-
-## Available Scripts
-
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run dev:server`: Start only the server
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
-- `bun run db:studio`: Open database studio UI
-
-## Better Auth Schema Generation
-
-After changing auth plugins or schema options, run `bun run auth:generate` from the project root. The script runs the Better Auth CLI through `varlock run` from the owning app directory, loading the auth instance from `src/services.ts`. Review the schema changes, then use your ORM's migration workflow to apply them.

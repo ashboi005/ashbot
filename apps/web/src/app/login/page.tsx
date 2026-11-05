@@ -1,16 +1,15 @@
-"use client";
-
-import { useState } from "react";
-
+import { Brand } from "@/components/brand";
 import SignInForm from "@/components/sign-in-form";
-import SignUpForm from "@/components/sign-up-form";
 
 export default function LoginPage() {
-  const [showSignIn, setShowSignIn] = useState(false);
-
-  return showSignIn ? (
-    <SignInForm onSwitchToSignUp={() => setShowSignIn(false)} />
-  ) : (
-    <SignUpForm onSwitchToSignIn={() => setShowSignIn(true)} />
+  return (
+    <main className="flex min-h-svh items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm">
+        <Brand className="mb-10" />
+        <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
+        <p className="mt-1.5 mb-8 text-sm text-muted-foreground">Use the email your invite was sent to.</p>
+        <SignInForm />
+      </div>
+    </main>
   );
 }
